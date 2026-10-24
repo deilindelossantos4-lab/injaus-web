@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InJaus Agencia Creativa | Contenido Visual y Audiovisual</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#090A0F',
+                            card: '#12151E',
+                            border: '#202636',
+                            neon: '#CCFF00', // Neon Lime/Yellow high impact accent
+                            neonHover: '#b8e600',
+                            gold: '#FFB800',
+                            purple: '#7000FF',
+                            textMuted: '#94A3B8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Syne', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090A0F;
+            color: #F8FAFC;
+            overflow-x: hidden;
+        }
+        .font-display {
+            font-family: 'Syne', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(18, 21, 30, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel-hover:hover {
+            border-color: rgba(204, 255, 0, 0.4);
+            box-shadow: 0 0 25px rgba(204, 255, 0, 0.15);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #FFFFFF 0%, #CCFF00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090A0F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #202636;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #CCFF00;
+        }
+        .glow-effect {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(204, 255, 0, 0.12) 0%, rgba(112, 0, 255, 0.05) 50%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="selection:bg-brand-neon selection:text-black">
+
+    <!-- ========================================== -->
+    <!-- NAVIGATION BAR -->
+    <!-- ========================================== -->
+    <header class="fixed top-0 left-0 right-0 z-40 px-4 md:px-8 py-4 transition-all duration-300" id="mainHeader">
+        <div class="max-w-7xl mx-auto glass-panel rounded-2xl px-5 py-3.5 flex items-center justify-between">
+            
+            <!-- LOGO -->
+            <a href="#inicio" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-brand-neon flex items-center justify-center text-black font-extrabold text-xl tracking-tighter group-hover:scale-105 transition-transform duration-300">
+                    IJ
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-extrabold text-lg tracking-wider text-white leading-tight">InJaus</span>
+                    <span class="text-[10px] tracking-widest text-brand-neon uppercase font-semibold">Agencia Creativa</span>
+                </div>
+            </a>
+
+            <!-- DESKTOP NAV -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#inicio" class="hover:text-brand-neon transition-colors">Inicio</a>
+                <a href="#modos" class="hover:text-brand-neon transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span>
+                    Modos InJaus
+                </a>
+                <a href="#portafolio" class="hover:text-brand-neon transition-colors">Portafolio</a>
+                <a href="#nosotros" class="hover:text-brand-neon transition-colors">Nosotros</a>
+                <a href="#reservas" class="hover:text-brand-neon transition-colors">Reservas</a>
+            </nav>
+
+            <!-- ACTION BUTTONS -->
+            <div class="hidden sm:flex items-center gap-3">
+                <button onclick="toggleBeaconsModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-brand-border hover:bg-slate-800 text-white flex items-center gap-2 border border-slate-700 transition-all">
+                    <i class="fa-solid fa-tree-city text-brand-neon"></i>
+                    <span>InJaus Links</span>
+                </button>
+                
+                <a href="#reservas" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-brand-neon text-black hover:bg-brand-neonHover transition-all shadow-[0_0_20px_rgba(204,255,0,0.3)]">
+                    Agendar Cita
+                </a>
+            </div>
+
+            <!-- MOBILE MENU TOGGLE -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-white text-xl p-2 focus:outline-none">
+                <i class="fa-solid fa-bars" id="menuIcon"></i>
+            </button>
+        </div>
+
+        <!-- MOBILE MENU OVERLAY -->
+        <div id="mobileMenu" class="hidden md:hidden max-w-7xl mx-auto glass-panel mt-2 rounded-2xl p-6 flex-col gap-4 text-center text-slate-200">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="py-2 hover:text-brand-neon">Inicio</a>
+            <a href="#modos" onclick="toggleMobileMenu()" class="py-2 hover:text-brand-neon">Modos InJaus</a>
+            <a href="#portafolio" onclick="toggleMobileMenu()" class="py-2 hover:text-brand-neon">Portafolio</a>
+            <a href="#nosotros" onclick="toggleMobileMenu()" class="py-2 hover:text-brand-neon">Nosotros</a>
+            <a href="#reservas" onclick="toggleMobileMenu()" class="py-2 hover:text-brand-neon">Reservas</a>
+            <div class="pt-4 border-t border-slate-800 flex flex-col gap-3">
+                <button onclick="toggleBeaconsModal(); toggleMobileMenu();" class="w-full py-3 rounded-xl bg-brand-border text-white text-xs font-bold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-tree-city text-brand-neon"></i> InJaus Links (Bio Tree)
+                </button>
+                <a href="#reservas" onclick="toggleMobileMenu()" class="w-full py-3 rounded-xl bg-brand-neon text-black text-xs font-bold">
+                    Agendar Cita
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- HERO SECTION -->
+    <!-- ========================================== -->
+    <section id="inicio" class="relative min-h-screen pt-32 pb-20 px-4 md:px-8 flex items-center justify-center overflow-hidden">
+        <div class="glow-effect top-1/4 left-1/2 -translate-x-1/2"></div>
+        <div class="glow-effect -top-10 -right-10"></div>
+
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-slate-800 text-xs text-brand-neon mb-8">
+                <span class="w-2 h-2 rounded-full bg-brand-neon animate-ping"></span>
+                <span>Agencia Audiovisual & Creativa · Santo Domingo, RD</span>
+            </div>
+
+            <h1 class="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-white mb-6 leading-none">
+                Creamos contenido que <span class="text-gradient">conecta y domina</span> la conversación.
+            </h1>
+
+            <p class="text-base sm:text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed font-light">
+                Producimos piezas audiovisuales de alto impacto para medios tradicionales y plataformas digitales. Tu marca vista desde adentro con el estándar <span class="text-white font-semibold">InJaus</span>.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <a href="#reservas" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-brand-neon text-black hover:bg-brand-neonHover transition-all flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(204,255,0,0.35)]">
+                    <i class="fa-regular fa-calendar-check text-lg"></i>
+                    <span>Reservar Asesoría Gratis</span>
+                </a>
+
+                <button onclick="openReelModal()" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold glass-panel text-white hover:bg-slate-800 transition-all flex items-center justify-center gap-3 border border-slate-700">
+                    <i class="fa-solid fa-play text-brand-neon"></i>
+                    <span>Ver Showreel 2026</span>
+                </button>
+
+                <button onclick="toggleBeaconsModal()" class="w-full sm:w-auto px-6 py-4 rounded-xl font-bold glass-panel text-slate-300 hover:text-brand-neon transition-all flex items-center justify-center gap-2 border border-slate-800">
+                    <i class="fa-solid fa-link text-xs"></i>
+                    <span>Bio Link</span>
+                </button>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto rounded-3xl overflow-hidden glass-panel p-2 shadow-2xl border border-slate-800 group">
+                <div class="relative aspect-video rounded-2xl overflow-hidden bg-brand-card flex items-center justify-center cursor-pointer" onclick="openReelModal()">
+                    <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80" alt="InJaus Production Reel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    
+                    <div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                        <div class="w-20 h-20 rounded-full bg-brand-neon/90 text-black flex items-center justify-center text-2xl shadow-[0_0_40px_rgba(204,255,0,0.6)] group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </div>
+                        <span class="text-xs font-bold tracking-widest uppercase text-white bg-black/60 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10">Haz Clic para Reproducir Showreel</span>
+                    </div>
+
+                    <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-slate-300 bg-black/50 p-3 rounded-xl backdrop-blur-md border border-white/10">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-brand-neon"></i>
+                            <span>+500K Reproducciones esta semana</span>
+                        </div>
+                        <div class="hidden sm:flex items-center gap-4 text-slate-400">
+                            <span>4K Ultra HD</span>
+                            <span>·</span>
+                            <span>Post-Producción InJaus</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- MODOS INJAUS (SERVICIOS INTERACTIVOS) -->
+    <!-- ========================================== -->
+    <section id="modos" class="py-24 px-4 md:px-8 relative bg-black/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div>
+                    <span class="text-brand-neon font-bold text-xs uppercase tracking-widest">Metodología de Trabajo</span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white mt-2">Modos InJaus</h2>
+                </div>
+                <p class="text-slate-400 max-w-md text-sm leading-relaxed">
+                    Diseñamos paquetes de producción optimizados según el objetivo de tu marca. Elige la modalidad de trabajo ideal para tus canales digitales o tradicionales.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- MODO 1 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between glass-panel-hover transition-all duration-300 group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-neon/10 border border-brand-neon/30 flex items-center justify-center text-brand-neon text-xl mb-6 group-hover:bg-brand-neon group-hover:text-black transition-all">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-neon tracking-widest uppercase">Modo 01</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1 mb-3">Modo Social Reel</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Contenido vertical dinámico diseñado exclusivamente para Instagram Reels, TikTok y YouTube Shorts. Enfoque en hooks virales y retención.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 mb-6 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Grabación en 4K 60fps</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Edición dinámica & Subtítulos</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Estrategia de Audio Trending</li>
+                    </ul>
+                    <a href="#reservas" onclick="selectServiceInBooking('Modo Social Reel')" class="w-full py-2.5 rounded-xl border border-slate-700 hover:border-brand-neon text-center text-xs font-bold text-white hover:text-brand-neon transition-all">
+                        Elegir Este Modo
+                    </a>
+                </div>
+
+                <!-- MODO 2 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between glass-panel-hover transition-all duration-300 group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-neon/10 border border-brand-neon/30 flex items-center justify-center text-brand-neon text-xl mb-6 group-hover:bg-brand-neon group-hover:text-black transition-all">
+                            <i class="fa-solid fa-film"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-neon tracking-widest uppercase">Modo 02</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1 mb-3">Modo Brand Film</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Producción cinematográfica institucional o comercial. Historias visuales de alta estética para TV, cine o lanzamientos de marca.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 mb-6 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Guionismo y Storyboard</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Iluminación de Cine & Dron</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Color Grading Profesional</li>
+                    </ul>
+                    <a href="#reservas" onclick="selectServiceInBooking('Modo Brand Film')" class="w-full py-2.5 rounded-xl border border-slate-700 hover:border-brand-neon text-center text-xs font-bold text-white hover:text-brand-neon transition-all">
+                        Elegir Este Modo
+                    </a>
+                </div>
+
+                <!-- MODO 3 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between glass-panel-hover transition-all duration-300 group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-neon/10 border border-brand-neon/30 flex items-center justify-center text-brand-neon text-xl mb-6 group-hover:bg-brand-neon group-hover:text-black transition-all">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-neon tracking-widest uppercase">Modo 03</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1 mb-3">Modo Podcast & Live</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Grabación y transmisión multicámara para podcasts, conversatorios y eventos de prensa en vivo con audio broadcast.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 mb-6 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Set Multicámara 3+ Fuentes</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Microfonía Shure / Audio HD</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Clips / Snippets para Redes</li>
+                    </ul>
+                    <a href="#reservas" onclick="selectServiceInBooking('Modo Podcast & Live')" class="w-full py-2.5 rounded-xl border border-slate-700 hover:border-brand-neon text-center text-xs font-bold text-white hover:text-brand-neon transition-all">
+                        Elegir Este Modo
+                    </a>
+                </div>
+
+                <!-- MODO 4 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between glass-panel-hover transition-all duration-300 group">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-neon/10 border border-brand-neon/30 flex items-center justify-center text-brand-neon text-xl mb-6 group-hover:bg-brand-neon group-hover:text-black transition-all">
+                            <i class="fa-solid fa-camera-retro"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-neon tracking-widest uppercase">Modo 04</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1 mb-3">Modo Full Visual360</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Gestión integral de la identidad visual de tu marca: Fotografía de producto, diseño gráfico editorial, cobertura de eventos y PR digital.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 mb-6 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Fotografía Profesional</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Kit de Marca Visual</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-neon"></i> Cobertura de Prensa / Medios</li>
+                    </ul>
+                    <a href="#reservas" onclick="selectServiceInBooking('Modo Full Visual360')" class="w-full py-2.5 rounded-xl border border-slate-700 hover:border-brand-neon text-center text-xs font-bold text-white hover:text-brand-neon transition-all">
+                        Elegir Este Modo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PORTAFOLIO INTERACTIVO CON FILTROS -->
+    <!-- ========================================== -->
+    <section id="portafolio" class="py-24 px-4 md:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-neon font-bold text-xs uppercase tracking-widest">Nuestra Galería</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white mt-2">Casos de Éxito Recientes</h2>
+                <p class="text-slate-400 text-sm mt-3">Explora algunos de nuestros proyectos audiovisuales desarrollados para marcas de alto nivel.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-12">
+                <button onclick="filterPortfolio('all')" class="port-filter-btn active px-5 py-2 rounded-xl text-xs font-bold bg-brand-neon text-black transition-all">Todos</button>
+                <button onclick="filterPortfolio('audiovisual')" class="port-filter-btn px-5 py-2 rounded-xl text-xs font-bold glass-panel text-slate-300 hover:text-white transition-all">Audiovisual & Commercials</button>
+                <button onclick="filterPortfolio('reels')" class="port-filter-btn px-5 py-2 rounded-xl text-xs font-bold glass-panel text-slate-300 hover:text-white transition-all">Reels & Social Media</button>
+                <button onclick="filterPortfolio('branding')" class="port-filter-btn px-5 py-2 rounded-xl text-xs font-bold glass-panel text-slate-300 hover:text-white transition-all">Branding & Fotografía</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolioGrid">
+                <!-- ITEM 1 -->
+                <div class="portfolio-item audiovisual glass-panel rounded-2xl overflow-hidden group cursor-pointer" onclick="openProjectModal('Campaña Comercial - Urban Energy', 'Producción de comercial audiovisual para marca internacional con animación 3D y color grading premium.', 'https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80', '+1.2M Vistas', 'Audiovisual')">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+                        <span class="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-brand-neon text-[10px] font-bold px-3 py-1 rounded-full border border-brand-neon/30">Audiovisual</span>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h4 class="font-display font-bold text-lg text-white">Urban Energy Commercial</h4>
+                            <p class="text-xs text-slate-300">Campaña audiovisual para televisión y redes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ITEM 2 -->
+                <div class="portfolio-item reels glass-panel rounded-2xl overflow-hidden group cursor-pointer" onclick="openProjectModal('Serie de Reels Virales - Moda RD', 'Estrategia de 15 Reels dinámicos con alcance orgánico de más de 800k impresiones.', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=800&q=80', '+850K Impresiones', 'Reels')">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+                        <span class="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-brand-neon text-[10px] font-bold px-3 py-1 rounded-full border border-brand-neon/30">Reels & Social</span>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h4 class="font-display font-bold text-lg text-white">Moda RD - Social Reels</h4>
+                            <p class="text-xs text-slate-300">Contenido vertical de alta tasa de retención</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ITEM 3 -->
+                <div class="portfolio-item branding glass-panel rounded-2xl overflow-hidden group cursor-pointer" onclick="openProjectModal('Fotografía Editorial & Branding - Luxe Hotel', 'Sesión de fotos institucional y renovación completa de kit visual publicitario.', 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80', '+150% Engagement', 'Branding')">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+                        <span class="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-brand-neon text-[10px] font-bold px-3 py-1 rounded-full border border-brand-neon/30">Branding & Foto</span>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h4 class="font-display font-bold text-lg text-white">Luxe Hotel Resort</h4>
+                            <p class="text-xs text-slate-300">Fotografía publicitaria y piezas gráficas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- NOSOTROS -->
+    <!-- ========================================== -->
+    <section id="nosotros" class="py-24 px-4 md:px-8 relative bg-black/40 border-y border-slate-800">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="text-brand-neon font-bold text-xs uppercase tracking-widest">Nuestra Esencia</span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white mt-2 mb-6">
+                        No hacemos videos simples. Creamos la identidad que tu audiencia recuerda.
+                    </h2>
+                    
+                    <p class="text-slate-300 leading-relaxed mb-6">
+                        <strong class="text-white">InJaus Agencia Creativa</strong> nace de la necesidad de elevar la vara visual en la República Dominicana y la región Caribeña. Combinamos la precisión de los medios tradicionales con la velocidad y narrativa de los medios digitales.
+                    </p>
+
+                    <div class="grid grid-cols-3 gap-4 border-t border-slate-800 pt-6">
+                        <div>
+                            <span class="font-display font-extrabold text-2xl md:text-3xl text-brand-neon">+50</span>
+                            <p class="text-xs text-slate-400 mt-1">Marcas Aliadas</p>
+                        </div>
+                        <div>
+                            <span class="font-display font-extrabold text-2xl md:text-3xl text-brand-neon">+500</span>
+                            <p class="text-xs text-slate-400 mt-1">Piezas Audiovisuales</p>
+                        </div>
+                        <div>
+                            <span class="font-display font-extrabold text-2xl md:text-3xl text-brand-neon">99%</span>
+                            <p class="text-xs text-slate-400 mt-1">Satisfacción</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="glass-panel p-4 rounded-3xl relative z-10 border border-slate-700">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="InJaus Studio Team" class="w-full h-auto rounded-2xl object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SISTEMA DE RESERVAS CONECTADO A SUPABASE -->
+    <!-- ========================================== -->
+    <section id="reservas" class="py-24 px-4 md:px-8 relative">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-brand-neon font-bold text-xs uppercase tracking-widest">Agendamiento Inmediato</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white mt-2">Reserva tu Asesoría Creativa</h2>
+                <p class="text-slate-400 text-sm mt-3">Selecciona el día y la hora que mejor se adapten a tu agenda. Los datos se guardan directamente en tu base de datos en tiempo real.</p>
+            </div>
+
+            <!-- BOOKING WIDGET CONTAINER -->
+            <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- CALENDAR SELECTION (LEFT 7 COLS) -->
+                <div class="lg:col-span-7 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-display font-bold text-lg text-white" id="calendarMonthYear">Octubre 2026</h3>
+                            <div class="flex gap-2">
+                                <button onclick="changeMonth(-1)" class="w-8 h-8 rounded-lg bg-brand-card border border-slate-700 flex items-center justify-center text-xs hover:border-brand-neon"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="changeMonth(1)" class="w-8 h-8 rounded-lg bg-brand-card border border-slate-700 flex items-center justify-center text-xs hover:border-brand-neon"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-slate-400 mb-3">
+                            <div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
+                        </div>
+
+                        <div class="grid grid-cols-7 gap-2" id="calendarDays"></div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-slate-800">
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-3">Horarios Disponibles:</label>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2" id="timeSlots">
+                            <button onclick="selectTime('09:00 AM')" class="time-slot-btn py-2 text-xs rounded-xl border border-slate-800 bg-brand-card text-slate-300 hover:border-brand-neon">09:00 AM</button>
+                            <button onclick="selectTime('11:00 AM')" class="time-slot-btn py-2 text-xs rounded-xl border border-slate-800 bg-brand-card text-slate-300 hover:border-brand-neon">11:00 AM</button>
+                            <button onclick="selectTime('02:30 PM')" class="time-slot-btn py-2 text-xs rounded-xl border border-slate-800 bg-brand-card text-slate-300 hover:border-brand-neon">02:30 PM</button>
+                            <button onclick="selectTime('04:00 PM')" class="time-slot-btn py-2 text-xs rounded-xl border border-slate-800 bg-brand-card text-slate-300 hover:border-brand-neon">04:00 PM</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM & DETAILS (RIGHT 5 COLS) -->
+                <div class="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-slate-800 pt-6 lg:pt-0 lg:pl-8 flex flex-col justify-between">
+                    <form id="bookingForm" onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                        <h3 class="font-display font-bold text-lg text-white mb-2">Detalles del Proyecto</h3>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-400 uppercase mb-1">Nombre Completo</label>
+                            <input type="text" id="bookingName" required placeholder="Tu Nombre o Nombre de Marca" class="w-full px-4 py-3 rounded-xl bg-brand-card border border-slate-800 text-sm text-white focus:outline-none focus:border-brand-neon transition-colors">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-400 uppercase mb-1">Correo Electrónico / WhatsApp</label>
+                            <input type="text" id="bookingEmail" required placeholder="ejemplo@correo.com o +1 809..." class="w-full px-4 py-3 rounded-xl bg-brand-card border border-slate-800 text-sm text-white focus:outline-none focus:border-brand-neon transition-colors">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-400 uppercase mb-1">Modo InJaus Deseado</label>
+                            <select id="selectedServiceInput" class="w-full px-4 py-3 rounded-xl bg-brand-card border border-slate-800 text-sm text-white focus:outline-none focus:border-brand-neon transition-colors">
+                                <option value="Modo Social Reel">Modo Social Reel</option>
+                                <option value="Modo Brand Film">Modo Brand Film</option>
+                                <option value="Modo Podcast & Live">Modo Podcast & Live</option>
+                                <option value="Modo Full Visual360">Modo Full Visual360</option>
+                                <option value="Consulta Personalizada">Consulta Personalizada</option>
+                            </select>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-brand-neon/10 border border-brand-neon/20 text-xs text-brand-neon">
+                            <div class="font-bold flex items-center gap-2">
+                                <i class="fa-regular fa-clock"></i>
+                                <span id="summaryDateTime">Selecciona fecha y hora</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 rounded-xl font-bold bg-brand-neon text-black hover:bg-brand-neonHover transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(204,255,0,0.3)]">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Confirmar Reserva</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- FOOTER -->
+    <!-- ========================================== -->
+    <footer class="bg-black py-12 px-4 md:px-8 border-t border-slate-800 text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-brand-neon flex items-center justify-center text-black font-extrabold text-sm">IJ</div>
+                <span class="font-display font-bold text-white text-base">InJaus Agencia Creativa</span>
+                <span>| Santo Domingo, RD</span>
+            </div>
+            <div>© 2026 InJaus Agencia Creativa. Todos los derechos reservados.</div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- MODAL: BEACONS / BIO LINK TREE -->
+    <!-- ========================================== -->
+    <div id="beaconsModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="relative w-full max-w-md bg-brand-card border border-slate-800 rounded-3xl p-6 shadow-2xl text-center">
+            <button onclick="toggleBeaconsModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-brand-neon flex items-center justify-center text-black font-extrabold text-3xl shadow-[0_0_30px_rgba(204,255,0,0.4)]">
+                IJ
+            </div>
+
+            <h3 class="font-display font-extrabold text-2xl text-white">InJaus Agencia Creativa</h3>
+            <p class="text-xs text-brand-neon font-medium mt-1 mb-6">@injausagencia · Santo Domingo, RD</p>
+
+            <div class="space-y-3">
+                <a href="https://wa.me/18090000000" target="_blank" class="w-full py-3.5 px-4 rounded-2xl glass-panel hover:border-brand-neon text-white font-bold text-xs flex items-center justify-between">
+                    <span class="flex items-center gap-3"><i class="fa-brands fa-whatsapp text-lg text-green-400"></i><span>WhatsApp Directo</span></span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500"></i>
+                </a>
+                <a href="#reservas" onclick="toggleBeaconsModal()" class="w-full py-3.5 px-4 rounded-2xl bg-brand-neon text-black font-extrabold text-xs flex items-center justify-between">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-calendar-day text-base"></i><span>Agendar Cita en Calendario</span></span>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: SHOWREEL & PROYECTOS -->
+    <!-- ========================================== -->
+    <div id="reelModal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4">
+        <div class="relative w-full max-w-4xl bg-brand-card border border-slate-800 rounded-3xl overflow-hidden shadow-2xl p-4">
+            <button onclick="closeReelModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <div class="relative aspect-video bg-black flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover opacity-80">
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/40">
+                    <div class="w-20 h-20 rounded-full bg-brand-neon text-black flex items-center justify-center text-3xl animate-pulse"><i class="fa-solid fa-play ml-1"></i></div>
+                    <p class="text-white font-bold text-sm tracking-widest uppercase">Reproduciendo InJaus Showreel 2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="projectModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="relative w-full max-w-2xl bg-brand-card border border-slate-800 rounded-3xl p-6">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <span id="modalProjCategory" class="text-[10px] uppercase font-bold text-brand-neon px-3 py-1 rounded-full bg-brand-neon/10 border border-brand-neon/30 inline-block mb-3">Categoría</span>
+            <h3 id="modalProjTitle" class="font-display font-extrabold text-2xl text-white mb-2">Título</h3>
+            <div class="aspect-video rounded-2xl overflow-hidden mb-4 bg-slate-900"><img id="modalProjImg" src="" class="w-full h-full object-cover"></div>
+            <p id="modalProjDesc" class="text-slate-300 text-sm mb-6">Descripción.</p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT & SUPABASE INTEGRATION -->
+    <!-- ========================================== -->
+    <script>
+        // Supabase Initialization
+        const SUPABASE_URL = 'https://rstixiswllohpcomgwcx.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJzdGl4aXN3bGxvaHBjb21nd2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NzE1NzcsImV4cCI6MjEwODM0NzU3N30.kHORgQpaiaaXyXnlKMpeXdYdIOAzcW-_39AEUsMAYxU';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentDate = new Date(2026, 9, 1); // Oct 2026
+        let selectedDay = 24;
+        let selectedTimeSlot = '11:00 AM';
+
+        window.onload = function() {
+            renderCalendar();
+            updateSummary();
+        };
+
+        function renderCalendar() {
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            document.getElementById('calendarMonthYear').innerText = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+            const calendarGrid = document.getElementById('calendarDays');
+            calendarGrid.innerHTML = '';
+
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                calendarGrid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayBtn = document.createElement('button');
+                dayBtn.type = 'button';
+                const isSelected = day === selectedDay;
+
+                dayBtn.className = `py-2.5 text-xs rounded-xl font-medium transition-all ${
+                    isSelected 
+                    ? 'bg-brand-neon text-black font-bold shadow-[0_0_15px_rgba(204,255,0,0.4)]' 
+                    : 'bg-brand-card border border-slate-800 text-slate-200 hover:border-slate-600'
+                }`;
+                dayBtn.innerText = day;
+                dayBtn.onclick = function() {
+                    selectedDay = day;
+                    renderCalendar();
+                    updateSummary();
+                };
+                calendarGrid.appendChild(dayBtn);
+            }
+        }
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function selectTime(time) {
+            selectedTimeSlot = time;
+            document.querySelectorAll('.time-slot-btn').forEach(btn => {
+                if(btn.innerText === time) {
+                    btn.classList.add('bg-brand-neon', 'text-black', 'font-bold');
+                    btn.classList.remove('bg-brand-card', 'text-slate-300');
+                } else {
+                    btn.classList.remove('bg-brand-neon', 'text-black', 'font-bold');
+                    btn.classList.add('bg-brand-card', 'text-slate-300');
+                }
+            });
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            document.getElementById('summaryDateTime').innerText = `Cita: ${selectedDay} de ${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()} - ${selectedTimeSlot}`;
+        }
+
+        function selectServiceInBooking(serviceName) {
+            const select = document.getElementById('selectedServiceInput');
+            if(select) select.value = serviceName;
+        }
+
+        // Handle Booking Form Submission directly to Supabase
+        async function handleBookingSubmit(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('bookingName').value;
+            const email = document.getElementById('bookingEmail').value;
+            const servicio = document.getElementById('selectedServiceInput').value;
+            const fechaFormateada = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
+            const fecha = fechaFormateada;
+            const hora = selectedTimeSlot;
+            const notas = `Cita agendada desde web Tailwind`;
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Guardando en Base de Datos...</span>`;
+            submitBtn.disabled = true;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('reservas')
+                    .insert([{ nombre, email, servicio, fecha, hora, notas }]);
+
+                if (error) throw error;
+
+                showNotification('¡Reserva guardada con éxito en la base de datos de Supabase!');
+                e.target.reset();
+            } catch (err) {
+                console.error('Error al guardar en Supabase:', err);
+                showNotification('Error al guardar: ' + (err.message || 'Inténtalo de nuevo.'));
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function filterPortfolio(category) {
+            const items = document.querySelectorAll('.portfolio-item');
+            const btns = document.querySelectorAll('.port-filter-btn');
+
+            btns.forEach(btn => btn.classList.remove('active', 'bg-brand-neon', 'text-black'));
+            btns.forEach(btn => btn.classList.add('glass-panel', 'text-slate-300'));
+
+            event.target.classList.add('active', 'bg-brand-neon', 'text-black');
+            event.target.classList.remove('glass-panel', 'text-slate-300');
+
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleBeaconsModal() { document.getElementById('beaconsModal').classList.toggle('hidden'); }
+        function openReelModal() { document.getElementById('reelModal').classList.remove('hidden'); }
+        function closeReelModal() { document.getElementById('reelModal').classList.add('hidden'); }
+        function openProjectModal(title, desc, img, metric, cat) {
+            document.getElementById('modalProjTitle').innerText = title;
+            document.getElementById('modalProjDesc').innerText = desc;
+            document.getElementById('modalProjImg').src = img;
+            document.getElementById('modalProjCategory').innerText = cat;
+            document.getElementById('projectModal').classList.remove('hidden');
+        }
+        function closeProjectModal() { document.getElementById('projectModal').classList.add('hidden'); }
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+        }
+
+        function showNotification(msg) {
+            const notif = document.createElement('div');
+            notif.className = 'fixed bottom-6 right-6 z-50 glass-panel border border-brand-neon text-white px-6 py-4 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-3 animate-bounce';
+            notif.innerHTML = `<i class="fa-solid fa-circle-check text-brand-neon text-lg"></i> <span>${msg}</span>`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
